@@ -1,3 +1,9 @@
+CREATE DATABASE myfinance;
+GO
+
+USE myfinance;
+GO
+
 IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'myfinance')
 BEGIN
 	CREATE DATABASE myfinance;
