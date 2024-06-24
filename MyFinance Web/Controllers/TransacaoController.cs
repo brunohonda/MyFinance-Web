@@ -119,11 +119,11 @@ namespace MyFinance_Web.Controllers
             {
                 try
                 {
-                    _service.Update(transacao);
+                    await _service.Update(transacao);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TransacaoExists(transacao.Id))
+                    if (!_service.Exists(transacao.Id))
                     {
                         return NotFound();
                     }
@@ -145,8 +145,7 @@ namespace MyFinance_Web.Controllers
                 return NotFound();
             }
 
-            var transacao = await _context.Transacao
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var transacao = await _service.Get((int)id);
             if (transacao == null)
             {
                 return NotFound();
@@ -160,19 +159,8 @@ namespace MyFinance_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var transacao = await _service.Get((int)id);
-            if (transacao != null)
-            {
-                _context.Transacao.Remove(transacao);
-            }
-
-            await _context.SaveChangesAsync();
+            await _service.Delete((int)id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool TransacaoExists(int id)
-        {
-            return _context.Transacao.Any(e => e.Id == id);
         }
     }
 }
