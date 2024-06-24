@@ -1,4 +1,4 @@
-﻿@model MyFinance_Web.Domain.Transacao
+﻿@model MyFinance_Web.Models.TransacaoCreateModel
 
 @{
     ViewData["Title"] = "Create";
@@ -28,8 +28,8 @@
                 <span asp-validation-for="Valor" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PlanoContaId" class="control-label"></label>
-                <input asp-for="PlanoContaId" class="form-control" />
+                <label asp-for="PlanoContaId" class="control-label">Plano de Conta</label>
+                <select asp-for="PlanoContaId" class="form-control" asp-items="@Model.planoContas"></select>
                 <span asp-validation-for="PlanoContaId" class="text-danger"></span>
             </div>
             <div class="form-group">

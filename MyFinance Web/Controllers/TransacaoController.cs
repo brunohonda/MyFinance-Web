@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyFinance_Web.Domain;
 using MyFinance_Web.Infrastructure;
+using MyFinance_Web.Models;
 using MyFinance_Web.Service;
 
 namespace MyFinance_Web.Controllers
@@ -15,14 +16,17 @@ namespace MyFinance_Web.Controllers
     {
         private readonly MyFinanceDbContext _context;
         private readonly ITransacaoService _service;
+        private readonly IPlanoContaService _planoContaService;
 
         public TransacaoController(
             MyFinanceDbContext context,
-            ITransacaoService service
+            ITransacaoService service,
+            IPlanoContaService planoContaService
         )
         {
             _context = context;
             _service = service;
+            _planoContaService = planoContaService;
         }
 
         // GET: Transacao
@@ -49,9 +53,12 @@ namespace MyFinance_Web.Controllers
         }
 
         // GET: Transacao/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var model = new TransacaoCreateModel();
+            model.Data = DateTime.Now;
+            model.planoContas = new SelectList(await _planoContaService.List(), "Id", "Descricao");
+            return View(model);
         }
 
         // POST: Transacao/Create
@@ -59,12 +66,11 @@ namespace MyFinance_Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Historico,Data,Valor,PlanoContaId")] Transacao transacao)
+        public async Task<IActionResult> Create(TransacaoCreateModel transacao)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(transacao);
-                await _context.SaveChangesAsync();
+                await _service.Add(transacao);
                 return RedirectToAction(nameof(Index));
             }
             return View(transacao);

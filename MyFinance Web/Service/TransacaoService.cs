@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyFinance_Web.Domain;
 using MyFinance_Web.Infrastructure;
+using MyFinance_Web.Models;
 
 namespace MyFinance_Web.Service
 {
@@ -16,9 +17,15 @@ namespace MyFinance_Web.Service
             _context = context;
             _logger = logger;
         }
-        public async Task<int> Add(Transacao model)
+        public async Task<int> Add(TransacaoCreateModel model)
         {
-            _context.Add(model);
+            // var transacao = new Transacao();
+            // transacao.Valor = model.transacao.Valor;
+            // transacao.Data = model.transacao.Data;
+            // transacao.Historico = model.transacao.Historico;
+            // transacao.PlanoContaId = model.transacao.PlanoContaId;
+
+            _context.Add((Transacao)model);
             return await _context.SaveChangesAsync();
         }
 
