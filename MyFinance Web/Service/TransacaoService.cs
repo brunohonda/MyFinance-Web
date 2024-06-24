@@ -36,6 +36,7 @@ namespace MyFinance_Web.Service
         public async Task<Transacao?> Get(int id)
         {
             return await _context.Transacao
+                .Include(t => t.PlanoConta)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 

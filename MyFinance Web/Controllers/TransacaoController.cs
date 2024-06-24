@@ -39,8 +39,7 @@ namespace MyFinance_Web.Controllers
                 return NotFound();
             }
 
-            var transacao = await _context.Transacao
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var transacao = await _service.Get((int)id);
             if (transacao == null)
             {
                 return NotFound();
@@ -79,7 +78,7 @@ namespace MyFinance_Web.Controllers
                 return NotFound();
             }
 
-            var transacao = await _context.Transacao.FindAsync(id);
+            var transacao = await _service.Get((int)id);
             if (transacao == null)
             {
                 return NotFound();
@@ -145,7 +144,7 @@ namespace MyFinance_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var transacao = await _context.Transacao.FindAsync(id);
+            var transacao = await _service.Get((int)id);
             if (transacao != null)
             {
                 _context.Transacao.Remove(transacao);
