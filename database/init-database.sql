@@ -28,5 +28,5 @@ CREATE TABLE Transacao(
 	data DATETIME DEFAULT CURRENT_TIMESTAMP,
 	planocontaid INT NOT NULL
 	PRIMARY KEY (id),
-	CONSTRAINT fk_lano_conta FOREIGN KEY (planocontaid) REFERENCES PlanoConta (id)
+	CONSTRAINT fk_plano_conta FOREIGN KEY (planocontaid) REFERENCES PlanoConta (id)
 );
