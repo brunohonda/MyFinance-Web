@@ -1,10 +1,12 @@
 using MyFinance_Web.Infrastructure;
+using MyFinance_Web.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MyFinanceDbContext>();
+builder.Services.AddScoped<IPlanoContaService, PlanoContaService>();
 
 var app = builder.Build();
 
