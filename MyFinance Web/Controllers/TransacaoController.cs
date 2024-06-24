@@ -7,22 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyFinance_Web.Domain;
 using MyFinance_Web.Infrastructure;
+using MyFinance_Web.Service;
 
 namespace MyFinance_Web.Controllers
 {
     public class TransacaoController : Controller
     {
         private readonly MyFinanceDbContext _context;
+        private readonly ITransacaoService _service;
 
-        public TransacaoController(MyFinanceDbContext context)
+        public TransacaoController(
+            MyFinanceDbContext context,
+            ITransacaoService service
+        )
         {
             _context = context;
+            _service = service;
         }
 
         // GET: Transacao
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Transacao.ToListAsync());
+            return View(await _service.List());
         }
 
         // GET: Transacao/Details/5
