@@ -17,15 +17,9 @@ namespace MyFinance_Web.Service
             _context = context;
             _logger = logger;
         }
-        public async Task<int> Add(TransacaoCreateModel model)
+        public async Task<int> Add(Transacao model)
         {
-            // var transacao = new Transacao();
-            // transacao.Valor = model.transacao.Valor;
-            // transacao.Data = model.transacao.Data;
-            // transacao.Historico = model.transacao.Historico;
-            // transacao.PlanoContaId = model.transacao.PlanoContaId;
-
-            _context.Add((Transacao)model);
+            _context.Add(model);
             return await _context.SaveChangesAsync();
         }
 

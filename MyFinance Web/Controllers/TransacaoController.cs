@@ -66,7 +66,7 @@ namespace MyFinance_Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TransacaoCreateModel transacao)
+        public async Task<IActionResult> Create([Bind("Id,Historico,Data,Valor,PlanoContaId")] Transacao transacao)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,18 @@ namespace MyFinance_Web.Controllers
             {
                 return NotFound();
             }
-            return View(transacao);
+
+            TransacaoCreateModel model = new TransacaoCreateModel()
+            {
+                Id = transacao.Id,
+                Data = transacao.Data,
+                Historico = transacao.Historico,
+                PlanoContaId = transacao.PlanoContaId,
+                Valor = transacao.Valor,
+                planoContas = new SelectList(await _planoContaService.List(), "Id", "Descricao")
+            };
+
+            return View(model);
         }
 
         // POST: Transacao/Edit/5
@@ -108,8 +119,7 @@ namespace MyFinance_Web.Controllers
             {
                 try
                 {
-                    _context.Update(transacao);
-                    await _context.SaveChangesAsync();
+                    _service.Update(transacao);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
