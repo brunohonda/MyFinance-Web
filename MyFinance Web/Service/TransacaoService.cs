@@ -41,7 +41,7 @@ namespace MyFinance_Web.Service
 
         public async Task<List<Transacao>> List()
         {
-            return await _context.Transacao.ToListAsync();
+            return await _context.Transacao.Include(t => t.PlanoConta).ToListAsync();
         }
 
         public async Task<int> Update(Transacao model)

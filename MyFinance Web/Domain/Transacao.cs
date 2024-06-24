@@ -7,6 +7,6 @@
         public DateTime Data { get; set; }
         public decimal Valor { get; set; }
         public int PlanoContaId{ get; set; }
-        private PlanoConta PlanoConta { get; set; }
+        public PlanoConta PlanoConta { get; set; }
     }
 }
