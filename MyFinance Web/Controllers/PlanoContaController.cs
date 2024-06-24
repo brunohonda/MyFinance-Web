@@ -7,22 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyFinance_Web.Domain;
 using MyFinance_Web.Infrastructure;
+using MyFinance_Web.Service;
 
 namespace MyFinance_Web.Controllers
 {
     public class PlanoContaController : Controller
     {
         private readonly MyFinanceDbContext _context;
+        private IPlanoContaService _service;
 
-        public PlanoContaController(MyFinanceDbContext context)
+        public PlanoContaController(IPlanoContaService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: PlanoConta
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PlanoConta.ToListAsync());
+            return View(await _service.List());
         }
 
         // GET: PlanoContas/Details/5
@@ -33,8 +35,7 @@ namespace MyFinance_Web.Controllers
                 return NotFound();
             }
 
-            var planoConta = await _context.PlanoConta
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var planoConta = await _service.Get((int)id);
             if (planoConta == null)
             {
                 return NotFound();
@@ -58,8 +59,7 @@ namespace MyFinance_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(planoConta);
-                await _context.SaveChangesAsync();
+                await _service.Add(planoConta);
                 return RedirectToAction(nameof(Index));
             }
             return View(planoConta);
@@ -73,7 +73,7 @@ namespace MyFinance_Web.Controllers
                 return NotFound();
             }
 
-            var planoConta = await _context.PlanoConta.FindAsync(id);
+            var planoConta = await _service.Get((int)id);
             if (planoConta == null)
             {
                 return NotFound();
@@ -97,12 +97,11 @@ namespace MyFinance_Web.Controllers
             {
                 try
                 {
-                    _context.Update(planoConta);
-                    await _context.SaveChangesAsync();
+                    await _service.Update(planoConta);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PlanoContaExists(planoConta.Id))
+                    if (!_service.Exists(planoConta.Id))
                     {
                         return NotFound();
                     }
@@ -124,8 +123,7 @@ namespace MyFinance_Web.Controllers
                 return NotFound();
             }
 
-            var planoConta = await _context.PlanoConta
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var planoConta = await _service.Get((int)id);
             if (planoConta == null)
             {
                 return NotFound();
@@ -139,19 +137,8 @@ namespace MyFinance_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var planoConta = await _context.PlanoConta.FindAsync(id);
-            if (planoConta != null)
-            {
-                _context.PlanoConta.Remove(planoConta);
-            }
-
-            await _context.SaveChangesAsync();
+            await _service.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool PlanoContaExists(int id)
-        {
-            return _context.PlanoConta.Any(e => e.Id == id);
         }
     }
 }
